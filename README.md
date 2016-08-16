@@ -2,7 +2,7 @@
 
 ## Overview
 
-This API is used to both find human faces within images and provide information about each face. You feed the API images, and it returns you lists of faces (each face record containing various information about the face, including info about each eye, etc).
+This API is used to both find human faces within images and make prediction of emotion about each face. You feed the API images, and it returns you lists of faces and the probabilities of 6 basic emotions: anger, fear, happy, sad, surprise, neutral.
 
 ## Simple Demo
 
