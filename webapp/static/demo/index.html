@@ -1,0 +1,177 @@
+<html>
+
+    <head>
+
+        <title>EmojiNET REST API Demo</title>
+
+        <!-- See: http://www.w3schools.com/jquery/default.asp -->
+        <script src="javascript/jquery-3.0.0.min.js"></script>
+
+        <!-- See: https://github.com/alexei/sprintf.js -->
+        <script src="javascript/sprintf.min.js"></script>
+
+        <!-- See: http://codepen.io/beben-koben/pen/KCsfA -->
+        <style>
+            body {
+                background: #333;
+            }
+            .drop_area_outer {
+                width: 45em;
+                padding: 15px;
+                border: 1px solid #333;
+                background: rgba(0,0,0,0.7);
+            }
+            .drop_area_inner {
+                border: 2px dashed #bbb;
+                -webkit-border-radius: 5px;
+                border-radius: 5px;
+                padding: 50px;
+                text-align: center;
+                font: 21pt bold arial;
+                color: #bbb;
+            }
+            .drop_area_inner_selected {
+                border: 4px solid blue;
+            }
+        </style>
+
+    </head>
+
+    <body>
+
+        <script>
+
+            function query_api(file, contents)
+            {
+                var data = new FormData();
+                data.append('image_buf', file);
+                $.ajax({
+                    url: '/v1.0.0/process_photo?annotate_image=true',
+                    data: data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    type: 'POST',
+                    success: function(response_object) {
+                        var src = response_object.annotated_image;
+                        $('#annotated_image').attr('src', src);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        alert(xhr.responseText + "   " + textStatus + "  " + errorThrown);
+                    }
+                });
+            }
+
+            // See: http://www.html5rocks.com/en/tutorials/file/dndfiles/
+
+            function log_file_info(files)
+            {
+                for (var i = 0; i < files.length; i++)
+                {
+                    var f = files[i];
+                    console.log(sprintf("%s: size:%d type:%s modified:%s",
+                                        f.name, f.size, f.type,
+                                        f.lastModifiedDate.toLocaleDateString()));
+                }
+            }
+
+            function read_files(files)
+            {
+                for (var i = 0; i < files.length; i++)
+                {
+                    var f = files[i];
+                    var reader = new FileReader();
+                    reader.onload = (function(f) {
+                        return function(e) {
+                            console.log(sprintf("Did read %s", f.name));
+                            contents = e.target.result;
+                            query_api(f, contents)
+                        }
+                    })(f);
+                    reader.readAsArrayBuffer(f);
+                }
+            }
+
+            $(function() {
+
+                if (!window.File || !window.FileReader || !window.FileList || !window.Blob)
+                {
+                    alert('The File APIs are not fully supported in this browser.');
+                }
+
+                $(window).on({
+                    dragover: function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                    },
+
+                    drop: function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }
+                });
+
+                drop_zone = $('#drop_zone')
+
+                drop_zone.on({
+                    dragover: function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        drop_zone.addClass('drop_area_inner_selected');
+                    },
+
+                    dragleave: function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        drop_zone.removeClass('drop_area_inner_selected');
+                    },
+
+                    dragenter: function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        drop_zone.addClass('drop_area_inner_selected');
+                    },
+
+                    dragexit: function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        drop_zone.removeClass('drop_area_inner_selected');
+                    },
+
+                    drop: function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        drop_zone.removeClass('drop_area_inner_selected');
+
+                        var files = e.originalEvent.dataTransfer.files; // FileList object
+                        log_file_info(files);
+                        read_files(files)
+                    }
+                });
+
+                $('#files').change(function(e) {
+                    var files = e.target.files;   // FileList object
+                    log_file_info(files);
+                    read_files(files)
+                });
+
+            });
+
+        </script>
+
+        <div class="drop_area_outer">
+            <div class="drop_area_inner" id="drop_zone">Drop images here</div>
+        </div>
+
+        <div>
+            Or browser for files:
+            <input type="file" id="files" name="files[]" multiple />
+        </div>
+
+        <div>
+            <img id="annotated_image" width=700>
+        </div>
+
+    </body>
+
+</html>
