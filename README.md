@@ -6,7 +6,7 @@ This API is used to both find human faces within images and provide information 
 
 ## Simple Demo
 
-Identify emotions in facial expression with this easy REST API: mememoji.rhobota.com
+Identify emotions in facial expression with this easy REST API: [mememoji.rhobota.com](mememoji.rhobota.com)
 
 ## Technologies Used
 
