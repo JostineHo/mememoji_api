@@ -6,7 +6,7 @@ This API is used to both find human faces within images and make prediction of e
 
 ## Simple Demo
 
-Identify emotions in facial expression with this easy REST API: [mememoji.rhobota.com](mememoji.rhobota.com)
+Identify emotions in facial expression with this easy REST API: [mememoji.rhobota.com](mememoji.rhobota.com) (no longer running)
 
 ## Technologies Used
 
@@ -17,7 +17,7 @@ Identify emotions in facial expression with this easy REST API: [mememoji.rhobot
 - [OpenAPI Specification](https://github.com/OAI/OpenAPI-Specification/) (fla _Swagger Spec_)
     - also see http://editor.swagger.io/ for a playground to help you write Swagger Spec
 - [OpenCV](http://opencv.org/)
-- [Keras](http://keras.io/) (soon!)
+- [Keras](http://keras.io/)
 - [MongoDB](https://docs.mongodb.com/manual/introduction/)
 - [AWS](https://aws.amazon.com/) (with an EC2 [Ubuntu](http://www.ubuntu.com/) image)
 
